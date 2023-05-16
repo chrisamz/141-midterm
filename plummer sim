@@ -325,3 +325,86 @@ ax.set_ylim([-10,10])
 ax.set_zlim([-10,10])
 plt.title('3D trajectories')
 plt.show()
+
+
+
+#######################################################################################################
+
+
+N = 1000
+mass1, mass2 = 1.0, 1.0
+scale_radius1, scale_radius2 = 1.0, 1.0
+
+
+def generate_plummer(N, mass, scale_radius):
+    r = (np.random.rand(N)**(-2/3) -1)**(-0.5)
+    theta = np.arccos(2*np.random.rand(N)-1)
+    phi = 2*np.pi*np.random.rand(N)
+    pos = np.zeros((N, 3))
+    pos[:,0] = r * np.sin(theta) * np.cos(phi) * scale_radius
+    pos[:,1] = r * np.sin(theta) * np.sin(phi) * scale_radius
+    pos[:,2] = r * np.cos(theta) * scale_radius
+    
+    vel = np.zeros((N, 3))
+    
+    return pos, vel
+
+pos1, vel1 = generate_plummer(N, mass1, scale_radius1)
+pos2, vel2 = generate_plummer(N, mass2, scale_radius2)
+pos2 += 5
+
+
+def leapfrog(pos, vel, mass, dt, eps = 0.01):
+    F = np.zeros_like(pos)
+    for i in range(len(pos)):
+        for j in range(i+1, len(pos)):
+            r = np.linalg.norm(pos[j] - pos[1])
+            f = mass[i] * mass[j] * (pos[j] - pos[i]) / (r**3 + eps**3)
+            F[i] += f
+            F[j] -= f
+            
+        vel += 0.5 * F / mass[:, np.newaxis] * dt
+        
+        pos += vel * dt
+        
+        F = np.zeros_like(pos)
+        for i in range(len(pos)):
+            for j in range(i+1, len(pos)):
+                r = np.linalg.norm(pos[j] - pos[i])
+                f = mass[i] * mass[j] * (pos[j] - pos[i]) / (r**3 + eps**3)
+                F[i] += f
+                F[j] -= f
+                vel += 0.5 * F / mass[:, np.newaxis] * dt
+                return pos, vel
+            
+pos = np.concatenate([pos1, pos2])
+vel = np.concatenate([vel1, vel2])
+mass = np.concatenate([mass1/N*np.ones(N), mass2/N*np.ones(N)])
+
+pos_list = [pos.copy()]
+
+for _ in range(1000):
+    pos, vel = leapfrog(pos, vel, mass, 0.01)
+    pos_list.append(pos.copy())
+    
+pos_array = np.array(pos_list)
+
+fig = plt.figure(figsize=(20,20))
+ax = fig.add_subplot(111, projection = '3d')
+
+# Final positions
+final_pos = pos_array[-1, :, :]
+
+for i in range(N):
+    ax.scatter(final_pos[i, 0], final_pos[i, 1], final_pos[i, 2], c='b')
+for i in range(N, 2*N):
+    ax.scatter(final_pos[i, 0], final_pos[i, 1], final_pos[i, 2], c='r')
+
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_zlabel('Z')
+ax.set_xlim([-10,10])
+ax.set_ylim([-10,10])
+ax.set_zlim([-10,10])
+plt.title('3D End Positions')
+plt.show()
