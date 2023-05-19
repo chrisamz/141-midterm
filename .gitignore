@@ -1,0 +1,14 @@
+.vscode
+CMakeFiles
+*.CMakeFiles
+CMakeCache.txt
+Makefile
+*.aux
+*fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.cmake
+*.bbl
+reportNotes.bib
