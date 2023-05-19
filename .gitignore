@@ -12,3 +12,5 @@ Makefile
 *.cmake
 *.bbl
 reportNotes.bib
+*.blg
+build
