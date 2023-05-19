@@ -408,3 +408,50 @@ ax.set_ylim([-10,10])
 ax.set_zlim([-10,10])
 plt.title('3D End Positions')
 plt.show()
+
+
+
+#############################################################
+
+
+import numpy as np
+from scipy.integrate import solve_ivp
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+G = 1.  # gravitational constant
+m1 = 1.  # mass of first core
+m2 = 1.  # mass of second core
+n_particles = 297  # number of disk particles per disk
+
+# function that describes the equations of motion
+def equations(t, y):
+    d = np.sqrt((y[0]-y[4])**2 + (y[2]-y[6])**2)
+    return [
+        y[1],
+        G*m2*(y[4]-y[0])/d**3,
+        y[3],
+        G*m2*(y[6]-y[2])/d**3,
+        y[5],
+        -G*m1*(y[4]-y[0])/d**3,
+        y[7],
+        -G*m1*(y[6]-y[2])/d**3
+    ]
+
+# initial conditions for the cores
+y0 = [1., 0., 0., 1., -1., 0., 0., -1.] 
+
+# run the simulation
+solution = solve_ivp(equations, [0, 10], y0, rtol=1e-8)
+
+# plot the orbits in 3D
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.plot(solution.y[0], solution.y[2], solution.t, label='core 1')
+ax.plot(solution.y[4], solution.y[6], solution.t, label='core 2')
+ax.set_xlabel('x')
+ax.set_ylabel('y')
+ax.set_zlabel('Time')
+ax.legend()
+plt.show()
+
