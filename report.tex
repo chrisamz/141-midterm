@@ -7,7 +7,7 @@
 
 \begin{document}
 
-\title{Manuscript Title: Subtitle}
+\title{Midterm Report}
 
 \author{Christian Amezcua}
 \email{chamezcu@ucsd.edu}
@@ -25,7 +25,9 @@
 \date{\today}
 
 \begin{abstract}
-An article usually includes an abstract, a concise summary of the work covered at length in the main body of the article.
+https://docs.google.com/presentation/d/1PJhqBG4SZgO4hD9mrBr3zhc9rpxX5IjZfOsyDzt0SGk/edit?usp=sharing
+
+This paper presents a study on the physics of galaxy collisions, with a focus on the specific case of NGC 4676, also known as "The Mice Galaxies." By employing simplified models and numerical simulations, the role of tidal forces and their influence on the dynamical evolution of galaxies during collisions is investigated. The study aims to gain insights into the mechanisms responsible for shaping the unique features observed in NGC 4676 and similar interacting galaxies. The simulation results reveal the formation and evolution of tidal tails, material redistribution, and overall galaxy dynamics. The presented methodologies, inspired by the pioneering work of Toomre and Toomre, contribute to a deeper understanding of galaxy interactions and provide valuable insights into the fundamental processes that shape the universe.
 \end{abstract}
 
 \maketitle
@@ -33,67 +35,89 @@ An article usually includes an abstract, a concise summary of the work covered a
 \section{Introduction}
 \label{sec:intro}
 
-Galaxy collisions are intriguing phenomena that provide insights into various physical processes, such as the effects of tidal forces on galaxies. This project aims to study the physics of galaxy collisions by employing simple models of galaxies. In particular, we will be focusing on the tidal forces and their influence on the dynamical evolution of galaxies during collisions. The motivation behind this project is to gain a deeper understanding of the underlying mechanisms that shape galaxy interactions.
+Galaxy collisions offer a unique opportunity to study the effects of tidal forces on galaxies, revealing insights into the fundamental physical processes shaping the universe. NGC 4676, also known as "The Mice Galaxies," serves as a remarkable example. This interacting pair of spiral galaxies, located approximately 290 million light-years away in Coma Berenices, displays extraordinary tidal tails—elongated streams of stars and gas. Tidal forces, arising from the gravitational interaction between the galaxies, strip material and shape these tails. Studying NGC 4676 and similar systems provides a valuable understanding of the intricate interplay between tidal forces and galaxy evolution.
 
-The main objective of this project is to reproduce and analyze a specific galaxy collision scenario. In this report, we will present the methods used to simulate the collision, report the obtained results, and discuss their significance. The primary source of inspiration for this project is the work by Toomre and Toomre \cite{to03000u}.
+This project aims to investigate the influence of tidal forces on galaxy collisions, with NGC 4676 as a reference point. By studying the specific collision scenario, we aim to comprehend the mechanisms behind the distinctive features observed in NGC 4676 and similar interacting galaxies. Computational simulations will be employed to recreate and analyze the collision, exploring the formation and evolution of tidal tails, material redistribution, and overall galaxy dynamics. These simulations, based on appropriate models and computational techniques, enable an accurate replication of NGC 4676-like collisions, yielding insights into their consequences and enhancing our understanding of galaxy interactions.
+
+In this paper, we will present the methodologies used to simulate the NGC 4676 collision scenario, providing a detailed description of the simulation setup, including assumptions and parameters. The obtained results will be reported and analyzed, focusing on galaxy behavior, tidal tail formation and properties, and the role of tidal forces. By leveraging NGC 4676 as a specific case study, these findings will contribute to our comprehension of the fundamental processes governing galaxy interactions.
+
+We draw inspiration from the influential work of Toomre and Toomre \cite{to03000u} in the field of galaxy collisions. Although not specifically centered on NGC 4676, their pioneering research has laid a strong foundation for our understanding of these phenomena. Building upon their contributions and utilizing modern computational tools, our aim is to advance our knowledge of galaxy collisions and make valuable contributions to the scientific literature.
 
 \section{Methods}
 \label{sec:methods}
 
-To simulate the galaxy collision, we employed the restricted 3-body problem and utilized a leap-frog integrator to solve the equations of motion. The general $N$-body equations of motion are given by:
+The first step in our study involved setting up the simulation of the NGC 4676 galaxy collision scenario. We utilized simplified models to represent the interacting galaxies, aiming to capture the essential dynamics of the system.
+
+To create the galaxies, we employed the create\textunderscore galaxy function, which generated particles distributed in rings around the galactic centers. The number of rings (N\textunderscore ring), particles per ring (N\textunderscore particles), initial radius (R), velocity of the galaxy (vel\textunderscore galaxy), and position and velocity offsets (pos\textunderscore offset and vel\textunderscore offset) were defined as inputs. This function produced the positions (pos) and velocities (vel) of the particles, which were then reshaped into suitable arrays for further calculations.
+
+Next, we implemented the numerical simulation of the galaxy collision dynamics through leapfrog integration. The simulation progressed in discrete time steps (dt) from 0 to the desired end time (t\textunderscore end).
+
+At each time step, the distances between particles and central masses were calculated using the numpy.linalg.norm function. Using these distances, the accelerations experienced by the particles and central masses were computed based on the gravitational force equation, considering the gravitational constant (G) and the masses of the galaxies and central masses (mass1, mass2, mass\textunderscore central1, mass\textunderscore central2).
+
+The velocities were then updated by adding the acceleration multiplied by the time step size: vel += acc * dt.
 
 \begin{equation}
-\ddot{{\bf r}}_i = -G \sum_{j=1;\, j \not = \,i}^N \frac{{m_j \, ({\bf r}_i - {\bf r}_j)}}{{(r_{ij}^2 + \epsilon^2)^{3/2}}}
+\ddot{{\bf r}}_i = - \frac{GM_A\left(P_A - r\right)}{\left(\left(P_A - r\right)^2 + \epsilon^2\right)^{3/2}} - \frac{GM_A\left(P_B - r\right)}{\left(\left(P_A - r\right)^2 + \epsilon^2\right)^{3/2}} 
 \label{eq:general_motion}
 \end{equation}
 
-We set up the initial conditions by incorporating appropriate rotations and other necessary transformations. For detailed implementation and code, please refer to our GitHub repository\footnote{\url{https://github.com/chrisamz/141-midterm}} \cite{github}.
+We utilized Equation (1) to calculate the acceleration ($\ddot{{\bf r}}_i$) experienced by each particle in the galaxy collision simulation. This equation describes the general motion of a particle influenced by the gravitational forces exerted by two central masses ($M_A$ and $M_B$) located at positions $P_A$ and $P_B$, respectively. The position vector of the particle is represented by $r$, and $G$ denotes the gravitational constant. The term $\epsilon$ is included to avoid singularities when the particle is in close proximity to the central masses. The equation captures the combined influence of both central masses on the particle's acceleration, with the forces decreasing as the distance between the particle and the central masses increases.
+
+The velocities were then updated by adding the acceleration multiplied by the time step size: vel += acc * dt. Similarly, the positions were updated by adding the velocity multiplied by the time step size: pos += vel * dt. These updates were performed for both the particles and the central masses.
+
+Throughout the simulation, the positions of the particles and central masses were stored in lists (pos1\textunderscore list, vel1\textunderscore list, pos2\textunderscore list, vel2\textunderscore list) to track their evolution over time. The obtained data allowed us to analyze the behavior of the galaxies, the formation and properties of tidal tails, and the role played by tidal forces in the collision.
+
+To visualize the simulation results, we utilized matplotlib's 3D plotting capabilities. The positions of the particles were plotted as scatter plots at each time step, with different colors representing the two interacting galaxies. Additionally, we created an animation using matplotlib's FuncAnimation, which updated the positions of the scatter plots to create a dynamic representation of the galaxy collision.
+
+For detailed implementation and code, please refer to our GitHub repository\footnote{\url{https://github.com/chrisamz/141-midterm}} \cite{github}.
 
 \section{Results}
 
-The simulations of the galaxy collision yielded interesting results. Figure \ref{fig:initial} shows the initial states of the two galaxies before the collision.
+In this section, we present the results obtained from our galaxy collision simulations. We analyze the initial states of the galaxies, the corresponding initial conditions, and the final outcome of the simulation. Four figures are included to illustrate these results.
+
+Figure \ref{fig:initial1} and Figure \ref{fig:initial2} depict the initial states of the two galaxies before the collision. These figures provide a visual representation of the positions and configurations of the galaxies at the beginning of the simulation.
 
 \begin{figure}[htb]
-    \centering
-    \includegraphics[width=0.7\columnwidth]{figures/1.png}
-    \caption{Initial states of the two galaxies before the collision.}
-    \label{fig:initial}
-\end{figure}
-
-Figures \ref{fig:2d} and \ref{fig:3d} illustrate the trajectories of a two-body system in two dimensions and three dimensions, respectively.
-
-\begin{figure}[htb]
-    \centering
-    \includegraphics[width=0.7\columnwidth]{figures/2.png}
-    \caption{Trajectories of a two-body system in two dimensions.}
-    \label{fig:2d}
+\centering
+\includegraphics[width=0.7\columnwidth]{figures/image (1).png}
+\caption{Initial states of the two galaxies before the collision.}
+\label{fig:initial1}
 \end{figure}
 
 \begin{figure}[htb]
-    \centering
-    \includegraphics[width=0.7\columnwidth]{figures/3.png}
-    \caption{Trajectories of a two-body system in three dimensions.}
-    \label{fig:3d}
+\centering
+\includegraphics[width=0.7\columnwidth]{figures/image.png}
+\caption{Initial states of the two galaxies before the collision (alternative view).}
+\label{fig:initial2}
 \end{figure}
 
-Finally, Figure \ref{fig:collision} shows the three-dimensional trajectories of the two colliding galaxies during the collision.
+To gain further insight into the simulation, we examine the initial conditions of the galaxies. Figure \ref{fig:init_conditions} presents a plot of the initial conditions obtained using our second method. This plot provides information on the positions, velocities, and other relevant parameters of the galaxies at the start of the simulation.
 
 \begin{figure}[htb]
-    \centering
-    \includegraphics[width=0.7\columnwidth]{figures/4.png}
-    \caption{Trajectories of the two colliding galaxies in three dimensions during the collision.}
-    \label{fig:collision}
+\centering
+\includegraphics[width=0.7\columnwidth]{figures/Initialconditions.png}
+\caption{Initial conditions of the galaxies before the collision.}
+\label{fig:init_conditions}
 \end{figure}
 
-The obtained results provide insights into the dynamics of the galaxy collision. Specifically, the simulations demonstrate the formation of tidal tails resulting from the gravitational interaction between the colliding galaxies. These tidal tails extend beyond the main bodies of the galaxies and are affected by the interplay of gravitational forces.
+Finally, we present the final result of our galaxy collision simulation. Figure \ref{fig:final_result} showcases the outcome of the simulation, capturing the evolved configuration of the galaxies after the collision. This figure provides valuable insights into the dynamic behavior, structural changes, and other observable features resulting from the collision process.
 
-Regarding the orientation of the tidal tails, we observe that they are not confined to the plane of the rotating disks or the collision plane. Instead, they exhibit complex three-dimensional structures, influenced by various factors such as the initial conditions, mass distribution, and relative velocities of the galaxies.
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.7\columnwidth]{figures/final1.png}
+\caption{Final result of the galaxy collision simulation.}
+\label{fig:final_result}
+\end{figure}
+
+The figures collectively illustrate the progression of the simulation, from the initial states and conditions to the final configuration, enabling us to analyze and interpret the dynamics and outcomes of the galaxy collision.
 
 \section{Conclusion}
 
-In conclusion, this project focused on the study of galaxy collisions and their physical implications, with a particular emphasis on tidal forces. By simulating a specific collision scenario, we successfully reproduced the collision of mice galaxies using a restricted 3-body problem and a leap-frog integrator. The simulations provided valuable insights into the dynamics of galaxy collisions, highlighting the formation and three-dimensional nature of tidal tails.
+In this study, we conducted simulations of a galaxy collision scenario using simplified models to investigate the role of tidal forces and the dynamics of interacting galaxies. By focusing on the specific case of NGC 4676, also known as "The Mice Galaxies," we aimed to gain insights into the underlying mechanisms that shape the unique features observed in such interactions.
 
-This project served as an opportunity to deepen our understanding of galaxy interactions and the effects of tidal forces. Future work could involve investigating different initial conditions, exploring more complex models, and studying the long-term evolution of colliding galaxies.
+Through our simulations, we successfully reproduced the initial states of the galaxies and their corresponding initial conditions. We observed the evolution of the galaxies during the collision and analyzed the resulting configurations. Our findings demonstrate the significant influence of tidal forces on the behavior of the galaxies, including the formation of tidal tails and the redistribution of material.
+
+The comparison of the initial and final states of the galaxies revealed substantial changes in their structures, highlighting the impact of the collision. The simulations allowed us to observe the dynamic interplay between the galaxies, shedding light on the mechanisms responsible for shaping the features observed in NGC 4676 and similar interacting systems.
 
 \section{Contributions}
 
@@ -101,10 +125,6 @@ Each team member contributed to this project in the following ways:
 - Christian Amezcua: Implemented the simulation code, performed the simulations, and analyzed the results.
 - Zice Zhao: Assisted in setting up the initial conditions, contributed to the analysis of the results, and reviewed the report.
 - Blase Fencil: Provided guidance and support throughout the project, reviewed and edited the report.
-
-\begin{acknowledgments}
-We would like to acknowledge the support and guidance provided by our advisor, Professor John Smith. We also express our gratitude to the University of California San Diego for providing the necessary resources for this research.
-\end{acknowledgments}
 
 \appendix
 
