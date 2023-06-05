@@ -7,7 +7,11 @@
 
 \begin{document}
 
+<<<<<<< HEAD
 \title{Midterm Report}
+=======
+\title{Midterm Project: Mice A}
+>>>>>>> 4c7c2534b40f42d5715e6af40948735fe3f7fd4e
 
 \author{Christian Amezcua}
 \email{chamezcu@ucsd.edu}
@@ -25,9 +29,13 @@
 \date{\today}
 
 \begin{abstract}
+<<<<<<< HEAD
 https://docs.google.com/presentation/d/1PJhqBG4SZgO4hD9mrBr3zhc9rpxX5IjZfOsyDzt0SGk/edit?usp=sharing
 
 This paper presents a study on the physics of galaxy collisions, with a focus on the specific case of NGC 4676, also known as "The Mice Galaxies." By employing simplified models and numerical simulations, the role of tidal forces and their influence on the dynamical evolution of galaxies during collisions is investigated. The study aims to gain insights into the mechanisms responsible for shaping the unique features observed in NGC 4676 and similar interacting galaxies. The simulation results reveal the formation and evolution of tidal tails, material redistribution, and overall galaxy dynamics. The presented methodologies, inspired by the pioneering work of Toomre and Toomre, contribute to a deeper understanding of galaxy interactions and provide valuable insights into the fundamental processes that shape the universe.
+=======
+    This project focuses on the comprehensive study of galaxy collisions, with a particular emphasis on the physical implications of tidal forces. By employing a restricted 3-body problem and a leap-frog integrator, we simulated the collision of mice galaxies as a specific collision scenario. The simulations provided valuable insights into the dynamics of galaxy collisions, specifically highlighting the formation and three-dimensional nature of tidal tails. Through the reproduction of the mice galaxy collision, we successfully captured essential aspects of the collision dynamics using our approach. The results deepen our understanding of galaxy interactions and the significant role played by tidal forces during collisions. Furthermore, we propose future avenues of investigation, including exploring different initial conditions, employing more complex models, and studying the long-term evolution of colliding galaxies. This project contributes to the growing body of knowledge on galaxy collisions, shedding light on their intricate dynamics and the multifaceted effects of tidal forces.
+>>>>>>> 4c7c2534b40f42d5715e6af40948735fe3f7fd4e
 \end{abstract}
 
 \maketitle
@@ -46,6 +54,7 @@ We draw inspiration from the influential work of Toomre and Toomre \cite{to03000
 \section{Methods}
 \label{sec:methods}
 
+<<<<<<< HEAD
 The first step in our study involved setting up the simulation of the NGC 4676 galaxy collision scenario. We utilized simplified models to represent the interacting galaxies, aiming to capture the essential dynamics of the system.
 
 To create the galaxies, we employed the create\textunderscore galaxy function, which generated particles distributed in rings around the galactic centers. The number of rings (N\textunderscore ring), particles per ring (N\textunderscore particles), initial radius (R), velocity of the galaxy (vel\textunderscore galaxy), and position and velocity offsets (pos\textunderscore offset and vel\textunderscore offset) were defined as inputs. This function produced the positions (pos) and velocities (vel) of the particles, which were then reshaped into suitable arrays for further calculations.
@@ -70,6 +79,39 @@ Throughout the simulation, the positions of the particles and central masses wer
 To visualize the simulation results, we utilized matplotlib's 3D plotting capabilities. The positions of the particles were plotted as scatter plots at each time step, with different colors representing the two interacting galaxies. Additionally, we created an animation using matplotlib's FuncAnimation, which updated the positions of the scatter plots to create a dynamic representation of the galaxy collision.
 
 For detailed implementation and code, please refer to our GitHub repository\footnote{\url{https://github.com/chrisamz/141-midterm}} \cite{github}.
+=======
+To simulate the galaxy collision, the restricted 3-body problem and a leapfrog integrator were employed to solve the equations of motion. The general $N$-body equations of motion, governing the dynamics of each body in the system, are given by:
+
+\begin{equation}
+    \ddot{{\bf r}}i = -G \sum{j=1;, j \not = ,i}^N \frac{{m_j , ({\bf r}_i - {\bf r}j)}}{{(r{ij}^2 + \epsilon^2)^{3/2}}}
+    \label{eq:general_motion}
+\end{equation}
+
+In this equation, ${\bf r}i$ represents the position vector of the $i$th body, $m_i$ is its mass, $G$ is the gravitational constant, and $r{ij}$ represents the distance between the $i$th and $j$th bodies. The term $\epsilon$ is introduced to avoid singularities when bodies are very close to each other.
+
+To set up the initial conditions for the simulation, appropriate rotations and other necessary transformations are incorporated. The details of this setup and the code implementation can be found in the GitHub repository associated with the project\cite{github}.
+
+The leapfrog integrator is then used to numerically solve the equations of motion. It is a symplectic integrator that updates the positions and velocities of the bodies in a staggered manner. The algorithm proceeds as follows:
+\begin{enumerate}
+    \item Initialize the positions and velocities of the bodies based on the desired initial conditions.
+    \item Specify the time step $\Delta t$ for the simulation.
+    \item For each time step: \begin{itemize}
+            \item Calculate the gravitational forces acting on each body by summing the contributions from all other bodies, as described by Equation \ref{eq:general_motion}.
+            \item Update the velocities of the bodies using a half-step update:
+            \begin{align*}
+                \dot{{\bf r}}_i(t + \frac{\Delta t}{2}) &= \dot{{\bf r}}_i(t) + \frac{\Delta t}{2} \ddot{{\bf r}}_i(t),
+            \end{align*}
+            \item Update the positions of the bodies using the updated velocities:
+            \begin{align*}
+                {\bf r}_i(t + \Delta t) &= {\bf r}_i(t) + \Delta t \dot{{\bf r}}_i(t + \frac{\Delta t}{2}).
+            \end{align*}
+        \end{itemize}
+    \item Repeat the above steps until the desired simulation duration is reached.
+
+    By iteratively updating the positions and velocities of the bodies using the leapfrog integrator, the system's dynamics can be simulated over time, allowing for the study of galaxy collisions and their effects.
+\end{enumerate}
+
+>>>>>>> 4c7c2534b40f42d5715e6af40948735fe3f7fd4e
 
 \section{Results}
 
@@ -122,12 +164,20 @@ The comparison of the initial and final states of the galaxies revealed substant
 \section{Contributions}
 
 Each team member contributed to this project in the following ways:
+<<<<<<< HEAD
 - Christian Amezcua: Implemented the simulation code, performed the simulations, and analyzed the results.
 - Zice Zhao: Assisted in setting up the initial conditions, contributed to the analysis of the results, and reviewed the report.
 - Blase Fencil: Provided guidance and support throughout the project, reviewed and edited the report.
+=======
+\begin{itemize}
+    \item[-] Christian Amezcua: Implemented the simulation code, performed the simulations, and analyzed the results.
+    \item[-] Zice Zhao: Assisted in setting up the initial conditions, contributed to the analysis of the results, and reviewed the report.
+    \item[-] Blase Fencil: Provided guidance and support throughout the project, reviewed and edited the report.
+\end{itemize}
+>>>>>>> 4c7c2534b40f42d5715e6af40948735fe3f7fd4e
 
 \appendix
 
-\bibliography{apssamp}
+\bibliography{report}
 
 \end{document}
